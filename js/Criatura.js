@@ -1,4 +1,4 @@
-class Criatura {
+export class Criatura {
 
     
     constructor(nombre, vida, ataque) {
@@ -12,6 +12,3 @@ class Criatura {
         this.ataque = ataque; // Ataque de la criatura.
     }
 }
-
-
-module.exports = Criatura;
