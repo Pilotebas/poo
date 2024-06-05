@@ -2,7 +2,7 @@ import { Criatura } from './Criatura.js';
 
 export class Heroe extends Criatura {
     // Clase para el héroe (jugador)
-    constructor(nombre, vidaMaxima, ataque, daño) {
+    constructor(nombre , vidaMaxima, ataque, daño) {
       super(nombre, vidaMaxima, ataque); // Llama al constructor de la clase base (Criatura)
       this.daño = daño; // Daño específico del héroe (puede ser diferente al ataque base)
       this.inventario = []; // Inventario del héroe para almacenar pociones

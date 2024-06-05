@@ -1,15 +1,18 @@
 import { Juego } from "./juego.js"
+import { Heroe } from "./Heroe.js"
 
-const juego = new Juego(); // Crear una instancia del juego
+const juego1 = new Juego();
+const atacar = document.getElementById("atacar")
+atacar.addEventListener("click",() => {
+    juego1.atacar(juego1.heroe);
+})
 
-juego.investigar();
-juego.investigar();
-juego.usarItem();
-juego.atacar();
-juego.atacar();
-juego.atacar();
-juego.atacar();
-juego.investigar();
-juego.investigar();
-juego.investigar();
+const investigar = document.getElementById("investigar")
+investigar.addEventListener("click",() => {
+    juego1.investigar(juego1.heroe);
+})
 
+const usaritem = document.getElementById("usaritem")
+usaritem.addEventListener("click",() => {
+    juego1.usarItem();
+})

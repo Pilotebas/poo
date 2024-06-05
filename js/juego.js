@@ -8,7 +8,7 @@ import { Kobold } from './Kobold.js';
 export class Juego {
     // Clase principal que maneja la lógica del juego
     constructor() {
-      this.heroe = new Heroe("Héroe", 100, 0, 20); // Crear al héroe
+      this.heroe = new Heroe("Héroe", 100, 20, 20); // Crear al héroe
       this.monstruoActual = null; // No hay monstruo al inicio
       this.logElement = document.getElementById("log"); // Elemento para mostrar mensajes
     }
@@ -21,7 +21,7 @@ export class Juego {
       // Método para que el héroe ataque al monstruo actual
     if (this.monstruoActual) {
         this.heroe.atacar(this.monstruoActual); // El héroe ataca al monstruo
-        this.log(`Has atacado al ${this.monstruoActual.nombre} y le has hecho ${this.heroe.daño} de daño.`);
+        this.log(`Has atacado al ${this.monstruoActual.nombre} y le has hecho ${this.heroe.daño} de daño, y le queda ${this.monstruoActual.vida}`);
         if (this.monstruoActual.vida <= 0) {
             this.log(`¡Has derrotado al ${this.monstruoActual.nombre}!`);
             this.monstruoActual = null; // El monstruo muere
