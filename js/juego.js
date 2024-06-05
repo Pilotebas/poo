@@ -1,57 +1,75 @@
 // Juego.js
 // Importa las clases necesarias.
-import {Orco} from './Orco.js';
-import {Goblin} from './Goblin.js';
-import {Kobold} from './Kobold.js';
+import { Heroe } from './Heroe.js';
+import { Orco } from './Orco.js';
+import { Goblin } from './Goblin.js';
+import { Kobold } from './Kobold.js';
 
 export class Juego {
+    // Clase principal que maneja la lógica del juego
     constructor() {
-        this.historial = []; // Inicializa el historial vacío.
-        this.monstruo = null; // Inicializa el monstruo actual como null.
+      this.heroe = new Heroe("Héroe", 100, 0, 20); // Crear al héroe
+      this.monstruoActual = null; // No hay monstruo al inicio
+      this.logElement = document.getElementById("log"); // Elemento para mostrar mensajes
+    }
+    log(mensaje) {
+      // Mostrar un mensaje en el registro del juego
+        this.logElement.innerHTML += mensaje + "<br>";
     }
 
-    // Método para agregar un mensaje al historial y mostrarlo en consola.
-    loguear(mensaje) {
-        this.historial.push(mensaje);
-        console.log(mensaje);
+    atacar() {
+      // Método para que el héroe ataque al monstruo actual
+    if (this.monstruoActual) {
+        this.heroe.atacar(this.monstruoActual); // El héroe ataca al monstruo
+        this.log(`Has atacado al ${this.monstruoActual.nombre} y le has hecho ${this.heroe.daño} de daño.`);
+        if (this.monstruoActual.vida <= 0) {
+            this.log(`¡Has derrotado al ${this.monstruoActual.nombre}!`);
+            this.monstruoActual = null; // El monstruo muere
+        } else {
+          this.monstruoContraataca(); // El monstruo contraataca si sobrevive
+        }
+    } else {
+        this.log("No hay ningún monstruo para atacar.");
+    }
     }
 
-    // Método para investigar y generar un nuevo monstruo aleatorio.
     investigar() {
-        // Verifica si actualmente hay un monstruo y si tiene vida mayor a 0.
-        if (this.monstruo && this.monstruo.vida > 0) {
-            // Si hay un monstruo con vida, muestra un mensaje indicando que no se puede investigar.
-            this.loguear('No puedes investigar mientras haya un monstruo con vida.');
-            return; // Sale del método para evitar la creación de un nuevo monstruo.
+    // Método para que el héroe investigue el entorno
+        if (this.monstruoActual) {
+            this.log("Ya hay un monstruo presente.");
+        } else {
+            const probabilidad = Math.random(); // Generar un número aleatorio
+            if (probabilidad < 0.25) {
+                this.heroe.inventario.push('Poción de vida'); // Encontrar poción de vida
+                this.log("Has encontrado una poción de vida y la has añadido a tu inventario.");
+            } else if (probabilidad < 0.5) {
+                this.heroe.inventario.push('Poción de ataque'); // Encontrar poción de ataque
+                this.log("Has encontrado una poción de ataque y la has añadido a tu inventario.");
+            } else {
+                const monstruos = [Orco, Goblin, Kobold]; // Lista de posibles monstruos
+                const indice = Math.floor(Math.random() * monstruos.length); // Elegir un monstruo aleatorio
+                this.monstruoActual = new monstruos[indice](); // Crear el monstruo
+                this.log(`¡Un ${this.monstruoActual.nombre} ha aparecido!`);
+            }
         }
-        
-        // Array que contiene las clases de los diferentes tipos de monstruos.
-        const tiposMonstruo = [Orco, Goblin, Kobold];
-        
-        // Genera un índice aleatorio para seleccionar un tipo de monstruo del array.
-        const indiceAleatorio = Math.floor(Math.random() * tiposMonstruo.length);
-        
-        // Crea una nueva instancia del monstruo seleccionado aleatoriamente.
-        this.monstruo = new tiposMonstruo[indiceAleatorio]();
-        
-        // Agrega un mensaje al historial y lo muestra en la consola indicando qué tipo de monstruo se ha encontrado.
-        this.loguear(`Has encontrado un ${this.monstruo.nombre}.`);
     }
-    
+    usarItem() {
+      // Método para que el héroe use un objeto de su inventario
+      const mensaje = this.heroe.usarItem(); // Llamar al método usarItem del héroe
+      this.log(mensaje); // Mostrar el resultado en el registro
+    }
 
-    // Método para atacar al monstruo actual.
-    atacar(heroe) {
-        if (!this.monstruo || this.monstruo.vida <= 0) {
-            this.loguear('No hay monstruos a los que atacar.');
-            return;
+    monstruoContraataca() {
+    // Método para que el monstruo ataque al héroe
+    if (Math.random() < 0.25) { // 25% de probabilidad de fallo
+        this.monstruoActual.atacar(this.heroe); // El monstruo ataca al héroe
+        this.log(`El ${this.monstruoActual.nombre} te ha atacado y te ha hecho ${this.monstruoActual.ataque} de daño.`);
+        if (this.heroe.vida <= 0) {
+          this.log("¡Has sido derrotado!"); // El héroe muere
+          // Aquí podrías reiniciar el juego o terminarlo.
         }
-
-        this.monstruo.vida -= heroe.ataque;
-        this.loguear(`Atacas a ${this.monstruo.nombre}! Le sacás ${heroe.ataque} de vida.`);
-        
-        if (this.monstruo.vida <= 0) {
-            this.loguear(`Has derrotado al ${this.monstruo.nombre}!`);
-            this.monstruo.vida = 0; // Asegura que la vida no sea negativa.
-        }
+    } else {
+        this.log(`El ${this.monstruoActual.nombre} ha fallado el golpe.`);
+    }
     }
 }
